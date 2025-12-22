@@ -3,157 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Şimşek Aspava - Dijital Menü</title>
+    <title>⚡ Furkan Restuarant ULTIMATE MAX</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-        body { background-color: #f4f7f6; font-family: 'Segoe UI', sans-serif; padding-bottom: 150px; scroll-behavior: smooth; }
-        .header { background: linear-gradient(135deg, #ce1212 0%, #8b0000 100%); color: white; padding: 30px 15px; text-align: center; border-radius: 0 0 25px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .nav-scroller { position: sticky; top: 0; z-index: 1000; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; white-space: nowrap; padding: 12px; }
-        .nav-item { display: inline-block; background: #eee; color: #444; padding: 8px 18px; border-radius: 25px; margin-right: 8px; text-decoration: none; font-size: 13px; font-weight: 700; transition: 0.3s; }
-        .nav-item:active { background: #ce1212; color: white; }
-        
-        .menu-card { background: white; border-radius: 18px; margin-bottom: 15px; display: flex; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border: 1px solid #eee; transition: 0.3s; overflow: hidden; }
-        .menu-card:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
-        .menu-img { width: 95px; height: 95px; object-fit: cover; border-radius: 12px; margin: 12px; }
-        .menu-info { flex: 1; padding: 10px 5px; }
-        .price-tag { color: #ce1212; font-weight: 800; font-size: 1.1rem; display: block; margin-top: 5px; }
-        
-        .order-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 20px; box-shadow: 0 -10px 25px rgba(0,0,0,0.1); border-radius: 25px 25px 0 0; display: none; z-index: 2000; }
-        .btn-whatsapp { background: #25D366; color: white; font-weight: 800; border-radius: 15px; border: none; padding: 15px; width: 100%; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3); }
-        .category-title { color: #333; font-weight: 800; margin: 25px 0 15px; padding-left: 10px; border-left: 5px solid #ce1212; }
-        .search-container { margin-top: -25px; }
-        .search-input { border-radius: 15px; border: none; padding: 12px 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        :root { --primary: #ce1212; --dark: #1a1a1a; --success: #25D366; --accent: #ffc107; }
+        body { background-color: #f0f2f5; font-family: 'Poppins', sans-serif; padding-bottom: 220px; }
+        .header { background: var(--primary); color: white; padding: 40px 20px; border-radius: 0 0 40px 40px; text-align: center; position: relative; overflow: hidden; }
+        .menu-card { background: white; border-radius: 20px; margin-bottom: 15px; border: none; transition: 0.4s; position: relative; display: flex; align-items: center; overflow: hidden; }
+        .menu-card:hover { transform: scale(1.02); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .menu-img { width: 85px; height: 85px; object-fit: cover; border-radius: 15px; margin: 10px; }
+        .filter-btn { border: none; background: white; padding: 8px 15px; border-radius: 20px; font-size: 12px; font-weight: 600; white-space: nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .filter-btn.active { background: var(--primary); color: white; }
+        .order-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 20px; box-shadow: 0 -10px 25px rgba(0,0,0,0.15); border-radius: 30px 30px 0 0; z-index: 2000; }
+        #suggestionToast { position: fixed; top: 20px; right: 20px; z-index: 3000; display: none; background: white; border-left: 5px solid gold; padding: 15px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1 class="fw-bold">⚡ ŞİMŞEK ASPAVA</h1>
-        <p class="opacity-75">Lezzetin Tek Adresi</p>
+    <div id="suggestionToast" class="animate__animated animate__fadeInRight"><span id="suggestionText"></span></div>
+
+    <div class="header animate__animated animate__fadeInDown">
+        <h1 class="fw-bolder">⚡ Furkan Restuarant <span class="badge bg-white text-danger" style="font-size: 12px;">MAX</span></h1>
+        <p class="mb-0">Hızlı, Sıcak, Akıllı Menü</p>
     </div>
 
-    <div class="container search-container">
-        <div class="row g-2">
-            <div class="col-8">
-                <input type="text" id="searchInput" class="form-control search-input" placeholder="🔍 Yemek ara..." onkeyup="aramaYap()">
-            </div>
+    <div class="container mt-4">
+        <div class="row g-2 mb-3">
+            <div class="col-8"><input type="text" id="searchInput" class="form-control rounded-pill border-0 shadow-sm p-3" placeholder="🔍 Canın ne çekti?" onkeyup="arama()"></div>
             <div class="col-4">
-                <select id="masaNo" class="form-select search-input fw-bold text-danger">
-                    <option value="Belirtilmedi">Masa?</option>
-                    <option value="Masa 1">M 1</option>
-                    <option value="Masa 2">M 2</option>
-                    <option value="Masa 3">M 3</option>
-                    <option value="Masa 4">M 4</option>
-                    <option value="Masa 5">M 5</option>
-                    <option value="Paket">Paket</option>
+                <select id="masaNo" class="form-select rounded-pill border-0 shadow-sm p-3 fw-bold text-danger">
+                    <option value="Bilinmiyor" selected disabled>📍 Masa?</option>
+                    <option value="Masa 1">M 1</option><option value="Masa 2">M 2</option><option value="Masa 3">M 3</option><option value="Paket">Paket</option>
                 </select>
             </div>
         </div>
-    </div>
 
-    <div class="nav-scroller mt-3">
-        {% for grup in menu %}
-            <a href="#{{ grup.id }}" class="nav-item">{{ grup.kategori }}</a>
-        {% endfor %}
-    </div>
+        <div class="d-flex gap-2 overflow-auto pb-3 mb-2" style="scrollbar-width: none;">
+            <button class="filter-btn active" onclick="filtrele('hepsi', this)">Hepsi</button>
+            {% for grup in menu %}
+                <button class="filter-btn" onclick="filtrele('{{ grup.id }}', this)">{{ grup.kategori }}</button>
+            {% endfor %}
+        </div>
 
-    <div class="container mt-2">
         {% for grup in menu %}
-            <h4 id="{{ grup.id }}" class="category-title">{{ grup.kategori }}</h4>
+        <div class="category-section" id="cat-{{ grup.id }}">
+            <h5 class="fw-bold mt-4 mb-3 border-start border-danger border-4 ps-2">{{ grup.kategori }}</h5>
             {% for urun in grup.urunler %}
-            <div class="menu-card animate-item">
-                <img src="{{ urun.resim }}" class="menu-img" alt="{{ urun.isim }}">
-                <div class="menu-info">
-                    <h6 class="mb-1 fw-bold">{{ urun.isim }}</h6>
-                    <small class="text-muted d-block">{{ urun.detay }}</small>
-                    <span class="price-tag">{{ urun.fiyat }}</span>
+            <div class="menu-card" data-name="{{ urun.isim | lower }}">
+                <img src="{{ urun.resim }}" class="menu-img">
+                <div class="flex-grow-1 ps-2 pe-3">
+                    <h6 class="mb-0 fw-bold">{{ urun.isim }}</h6>
+                    <small class="text-muted d-block" style="font-size: 0.75rem;">{{ urun.detay }}</small>
+                    <div class="d-flex justify-content-between align-items-center mt-1">
+                        <span class="text-danger fw-bolder">{{ urun.fiyat }}</span>
+                        <button onclick="sepeteEkle('{{ urun.isim }}', '{{ urun.fiyat }}', '{{ urun.oneri }}')" class="btn btn-dark btn-sm rounded-pill px-3">Ekle</button>
+                    </div>
                 </div>
-                <button class="btn btn-danger btn-sm me-3 rounded-pill px-3 fw-bold" 
-                        onclick="sepeteEkle('{{ urun.isim }}', '{{ urun.fiyat }}')">➕ Ekle</button>
             </div>
             {% endfor %}
+        </div>
         {% endfor %}
     </div>
 
-    <div id="orderBar" class="order-bar">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-                <span class="d-block text-muted small">Toplam Tutar:</span>
-                <span class="h4 fw-bold text-danger" id="toplamTutar">0 TL</span>
-            </div>
-            <button class="btn btn-sm btn-light rounded-pill" onclick="sepetiSifirla()">🧹 Temizle</button>
+    <div id="orderBar" class="order-bar animate__animated animate__slideInUp" style="display: none;">
+        <input type="text" id="siparisNotu" class="form-control rounded-pill mb-2 border-light shadow-sm" placeholder="📝 Notunuz (Soğansız vb.)">
+        <div class="d-flex justify-content-between mb-3">
+            <div><small class="text-muted">Toplam Ödeme:</small><h3 class="fw-bold text-danger mb-0" id="totalPrice">0 TL</h3></div>
+            <button class="btn btn-sm text-muted" onclick="temizle()">Sıfırla</button>
         </div>
-        <div class="mb-3">
-            <input type="text" id="musteriNotu" class="form-control form-control-sm rounded-pill" placeholder="✍️ Sipariş notunuz (Soğansız vb.)">
+        <div class="row g-2">
+            <div class="col-4"><button onclick="garsonCagir()" class="btn btn-warning w-100 py-3 rounded-4 fw-bold">🛎️ Garson</button></div>
+            <div class="col-8"><button onclick="wpGonder()" class="btn btn-success w-100 py-3 rounded-4 fw-bold">🟢 WHATSAPP SİPARİŞ</button></div>
         </div>
-        <button class="btn-whatsapp" onclick="wpSiparisGonder()">🟢 Siparişi WhatsApp'a Gönder</button>
     </div>
 
     <script>
         let sepet = [];
-        let telefonNumarasi = "905464744594"; // BURAYA NUMARANI YAZ!
+        let numara = "905464744594"; // BURAYA KENDİ NUMARANI YAZ
 
-        function sepeteEkle(isim, fiyat) {
-            // Fiyat bilgisinden sadece sayı kısmını al (Örn: "320 TL" -> 320)
-            let sayisalFiyat = parseInt(fiyat.replace(/[^0-9]/g, ''));
-            sepet.push({isim, fiyat: sayisalFiyat});
-            
-            guncelleArayuz();
-        }
-
-        function guncelleArayuz() {
-            let bar = document.getElementById('orderBar');
-            if(sepet.length > 0) {
-                bar.style.display = 'block';
-                let toplam = sepet.reduce((acc, curr) => acc + curr.fiyat, 0);
-                document.getElementById('toplamTutar').innerText = toplam + " TL";
-            } else {
-                bar.style.display = 'none';
+        function sepeteEkle(ad, fiyat, oneri) {
+            let p = parseInt(fiyat.replace(/[^0-9]/g, ''));
+            sepet.push({ad, p});
+            if(oneri && oneri !== 'None') {
+                let toast = document.getElementById('suggestionToast');
+                document.getElementById('suggestionText').innerHTML = `💡 <b>Öneri:</b> ${ad} yanına <u>${oneri}</u> harika gider!`;
+                toast.style.display = 'block';
+                setTimeout(() => { toast.style.display = 'none'; }, 4000);
             }
+            guncelle();
         }
 
-        function sepetiSifirla() {
-            sepet = [];
-            guncelleArayuz();
+        function guncelle() {
+            document.getElementById('orderBar').style.display = sepet.length > 0 ? 'block' : 'none';
+            document.getElementById('totalPrice').innerText = sepet.reduce((a, b) => a + b.p, 0) + " TL";
         }
 
-        function aramaYap() {
-            let input = document.getElementById('searchInput').value.toLowerCase();
-            let items = document.getElementsByClassName('menu-card');
-            for (let item of items) {
-                let text = item.querySelector('h6').innerText.toLowerCase();
-                item.style.display = text.includes(input) ? "flex" : "none";
-            }
+        function wpGonder() {
+            let m = document.getElementById('masaNo').value;
+            if(m === "Bilinmiyor") { alert("Önce masa seç kanka!"); return; }
+            let msg = `*⚡ ŞİMŞEK ASPAVA MAX SİPARİŞ*\n📍 MASA: ${m}\n━━━━━━━━━━━━━━━\n`;
+            sepet.forEach(item => msg += `• ${item.ad}\n`);
+            let n = document.getElementById('siparisNotu').value;
+            if(n) msg += `\n📝 NOT: ${n}\n`;
+            msg += `━━━━━━━━━━━━━━━\n💰 TOPLAM: *${document.getElementById('totalPrice').innerText}*`;
+            window.open(`https://wa.me/${numara}?text=${encodeURIComponent(msg)}`);
         }
 
-        function wpSiparisGonder() {
-            let masa = document.getElementById('masaNo').value;
-            let not = document.getElementById('musteriNotu').value;
-            
-            if(masa === "Belirtilmedi") {
-                alert("Lütfen masa numaranızı seçin!"); return;
-            }
+        function garsonCagir() {
+    let m = document.getElementById('masaNo').value;
+    
+    // Masa seçimi kontrolü (Piyasadaki en güvenli kontrol)
+    if(m === "Bilinmiyor" || m === "" || m === null) { 
+        alert("Önce masanı seç kanka, garson nereye geleceğini bilsin! 😊"); 
+        return; 
+    }
+    
+    // Mesaj içeriğini hazırlıyoruz
+    let mesajMetni = `*🛎️ GARSON ÇAĞRISI*\n📍 MASA: ${m}\nMüşteri masada seni bekliyor şefim!`;
+    
+    // 404 hatasını engelleyen doğru URL yapısı
+    let wpUrl = `https://wa.me/${numara}?text=${encodeURIComponent(mesajMetni)}`;
+    
+    window.open(wpUrl, '_blank');
+}
+        
 
-            let urunSayilari = {};
-            sepet.forEach(x => { urunSayilari[x.isim] = (urunSayilari[x.isim] || 0) + 1; });
-
-            let mesaj = `*⚡ ŞİMŞEK ASPAVA SİPARİŞİ*\n`;
-            mesaj += `━━━━━━━━━━━━━━━\n`;
-            mesaj += `📍 *KONUM:* ${masa}\n`;
-            mesaj += `━━━━━━━━━━━━━━━\n\n`;
-            
-            for (let urun in urunSayilari) {
-                mesaj += `✅ ${urunSayilari[urun]} Adet - *${urun}*\n`;
-            }
-            
-            mesaj += `\n━━━━━━━━━━━━━━━\n`;
-            if(not) mesaj += `📝 *NOT:* ${not}\n`;
-            mesaj += `💰 *TOPLAM:* ${document.getElementById('toplamTutar').innerText}\n`;
-            mesaj += `━━━━━━━━━━━━━━━\n`;
-            mesaj += `_Sipariş dijital menüden gönderildi._`;
-
-            window.open(`https://wa.me/${telefonNumarasi}?text=${encodeURIComponent(mesaj)}`, '_blank');
+        function filtrele(id, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.category-section').forEach(s => s.style.display = (id === 'hepsi' || s.id === 'cat-' + id) ? 'block' : 'none');
         }
+
+        function arama() {
+            let val = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('.menu-card').forEach(c => c.style.display = c.getAttribute('data-name').includes(val) ? 'flex' : 'none');
+        }
+
+        function temizle() { sepet = []; guncelle(); }
     </script>
 </body>
 </html>

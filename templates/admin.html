@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Şimşek Aspava</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-dark text-white p-4">
+    <div class="container">
+        <h2 class="mb-4">🛠️ Mutfak Yönetim Merkezi</h2>
+        
+        <div class="card bg-secondary text-white p-3 mb-4">
+            <form action="/admin/ekle" method="POST" class="row g-2">
+                <div class="col-md-2"><input type="text" name="kategori_id" placeholder="ID (corba)" class="form-control" required></div>
+                <div class="col-md-2"><input type="text" name="kategori_ad" placeholder="Başlık (🥣 Çorbalar)" class="form-control" required></div>
+                <div class="col-md-2"><input type="text" name="isim" placeholder="Yemek Adı" class="form-control" required></div>
+                <div class="col-md-1"><input type="number" name="fiyat" placeholder="Fiyat" class="form-control" required></div>
+                <div class="col-md-3"><input type="text" name="resim" placeholder="Resim URL" class="form-control"></div>
+                <div class="col-md-2"><button type="submit" class="btn btn-danger w-100">🚀 Ekle</button></div>
+            </form>
+        </div>
+
+        {% for grup in menu %}
+        <h5 class="mt-4">{{ grup.kategori }}</h5>
+        <table class="table table-dark table-striped">
+            {% for urun in grup.urunler %}
+            <tr>
+                <td>{{ urun.isim }}</td>
+                <td>{{ urun.fiyat }}</td>
+                <td class="text-end">
+                    <a href="/admin/stok/{{ grup.id }}/{{ loop.index0 }}" class="btn btn-sm {{ 'btn-success' if urun.stok else 'btn-warning' }}">
+                        {{ 'Stokta ✅' if urun.stok else 'Bitti ❌' }}
+                    </a>
+                    <a href="/admin/sil/{{ grup.id }}/{{ loop.index0 }}" class="btn btn-sm btn-outline-danger">Sil</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endfor %}
+    </div>
+</body>
+</html>
